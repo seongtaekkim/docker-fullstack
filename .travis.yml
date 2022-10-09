@@ -7,9 +7,6 @@ services:
 
 before_install:
  - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./frontend
- - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./backend
- - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./nginx
-
 script:
  - docker run -e CI=true seongtaekkim/react-test npm run test
 
