@@ -1,0 +1,25 @@
+language: generic
+
+sudo: required
+
+services:
+ - docker
+
+before_install:
+ - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./frontend
+ - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./backend
+ - docker build -t seongtaekkim/react-test -f ./frontend/Dockerfile.dev ./nginx
+
+script:
+ - docker run -e CI=true seongtaekkim/react-test npm run test
+
+after_success:
+ - docker build -t seongtaekkim/docker-frontend ./frontend
+ - docker build -t seongtaekkim/docker-backend ./backend
+ - docker build -t seongtaekkim/docker-nginx ./nginx
+
+ - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" -password-stdin
+
+ - docker push seongtaekkim/docker-frontend
+ - docker push seongtaekkim/docker-backend
+ - docker push seongtaekkim/docker-nginx
